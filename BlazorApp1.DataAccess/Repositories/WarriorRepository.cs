@@ -1,9 +1,7 @@
 ﻿using BlazorApp1.DataAccess.Contracts;
 using BlazorApp1.DataAccess.Entities;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace BlazorApp1.DataAccess.Repositories
@@ -27,7 +25,6 @@ namespace BlazorApp1.DataAccess.Repositories
         public async Task<List<Warrior>> GetAll()
         {
             return _context.Warrior.ToList();
-            
         }
 
     }
