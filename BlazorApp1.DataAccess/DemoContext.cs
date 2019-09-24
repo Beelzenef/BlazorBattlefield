@@ -11,12 +11,27 @@ namespace BlazorApp1.DataAccess
         {
         }
 
+        public DbSet<Game> Games { get; set; }
+        public DbSet<Player> Players { get; set; }
         public DbSet<Warrior> Warrior { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Warrior>().ToTable("Warrior");
+            modelBuilder.Entity<Game>()
+                .ToTable("Game");
 
+            modelBuilder.Entity<Player>()
+                .HasOne(p => p.Game)
+                .WithMany(g => g.Players)
+                .HasForeignKey(p => p.GameId);
+            modelBuilder.Entity<Player>().ToTable("Player");
+
+            modelBuilder.Entity<Warrior>()
+                .HasOne(w => w.Player)
+                .WithOne(p => p.Warrior);
+                //.HasForeignKey<Warrior>(w => w.PlayerId);
+            modelBuilder.Entity<Warrior>()
+                .ToTable("Warrior");
         }
     }
 }
