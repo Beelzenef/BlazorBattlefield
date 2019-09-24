@@ -9,8 +9,10 @@ namespace BlazorApp1.Application.Contracts
     public interface IFightService
     {
         Task<Game> CreateGame(Game game);
+        Game GetLastGame();
+        List<Player> GetPlayersLastGame(Game game);
         Task AddPlayer(Player player, Game game);
-        Task SelectWarrior(int playerId, int warriorId);
+        Task SelectWarrior(Player player, Warrior warrior);
 
         Task<Warrior> AddWarrior(Warrior warrior);
         Task<List<Warrior>> GetAllWarriors();

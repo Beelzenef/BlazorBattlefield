@@ -1,7 +1,6 @@
 ﻿using BlazorApp1.Application.Contracts;
 using BlazorApp1.DataAccess.Contracts;
 using BlazorApp1.DataAccess.Entities;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -24,8 +23,20 @@ namespace BlazorApp1.Application
         {
             await _gameRepository.CreateGame(game);
 
+            var lastGame = GetLastGame();
+            return lastGame;
+        }
+
+        public Game GetLastGame()
+        {
             var createdGame = _gameRepository.GetLastGame();
             return createdGame;
+        }
+
+        public List<Player> GetPlayersLastGame(Game game)
+        {
+            var players = _gameRepository.GetPlayers(game.Id);
+            return players;
         }
 
         public async Task AddPlayer(Player player, Game game)
@@ -33,9 +44,9 @@ namespace BlazorApp1.Application
             await _playerRepository.AddPlayers(player, game);
         }
 
-        public async Task SelectWarrior(int playerId, int warriorId)
+        public async Task SelectWarrior(Player player, Warrior warrior)
         {
-            await _playerRepository.SelectWarrior(playerId, warriorId);
+            await _playerRepository.SelectWarrior(player, warrior);
         }
 
         public async Task<Warrior> AddWarrior(Warrior warrior)

@@ -27,5 +27,10 @@ namespace BlazorApp1.DataAccess.Repositories
             return _context.Warrior.ToList();
         }
 
+        public Warrior GetWarriorByName(string warriorName)
+        {
+            return _context.Warrior.FirstOrDefault(w => w.Name == warriorName);
+        }
+
     }
 }

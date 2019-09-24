@@ -10,6 +10,7 @@ namespace BlazorApp1.DataAccess.Contracts
     {
         Task<Warrior> Add(Warrior warrior);
         Task<List<Warrior>> GetAll();
+        Warrior GetWarriorByName(string warriorName);
 
     }
 }

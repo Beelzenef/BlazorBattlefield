@@ -1,0 +1,125 @@
+@page "/choosewarrior"
+
+@using BlazorApp1.Data
+@inject BlazorApp1.Application.Contracts.IFightService FightService
+
+<h1>Choose warriors!</h1>
+
+@if (!playersPresent) {
+    <label>Players missing for this game!</label>
+}
+else {
+    <EditForm Model="@selectedWarriorOne">
+
+        <table class="form-group">
+            <tr>
+                <td>
+                    <p>
+                        <label>@playerOne.Nickname</label>
+                    </p>
+                </td>
+                <td>
+                        <p>
+                            <label>Select warrior</label>
+                            <InputSelect id="warriorOne" @bind-Value="selectedWarriorOne.Name">
+                                @foreach (var item in warriors)
+                                {
+                                    <option value="@item.Name">@item.Name - @item.Class</option>
+                                }
+                            </InputSelect>
+                        </p>
+                </td>
+                 <td>
+                    @if (playerOneMissing)
+                    {
+                        <p>
+                            <button class="btn btn-primary" @onclick="SelectWarriorOne">Select warrior!</button>
+                        </p>
+                    }
+                </td>
+            </tr>
+        </table>
+    </EditForm>
+
+    <EditForm Model="@selectedWarriorTwo">
+        <table class="form-group">
+            <tr>
+                <td>
+                    <p>
+                        <label>@playerTwo.Nickname:</label>
+                    </p>
+                </td>
+
+                <td>
+                    <p>
+                            <label>Select warrior</label>
+                            <InputSelect id="warriorTwo" @bind-Value="selectedWarriorTwo.Name">
+                                @foreach (var item in warriors)
+                                {
+                                    <option value="@item.Name">@item.Name - @item.Class</option>
+                                }
+                            </InputSelect>
+                    </p>
+                </td>
+                 <td>
+                    @if (playerTwoMissing)
+                    {
+                        <p>
+                            <button class="btn btn-primary" @onclick="SelectWarriorTwo">Select warrior!</button>
+                        </p>
+                    }
+                </td>
+            </tr>
+
+        </table>
+
+    </EditForm>
+}
+
+@code {
+    
+    BlazorApp1.DataAccess.Entities.Game game;
+
+    BlazorApp1.DataAccess.Entities.Player playerOne;
+    BlazorApp1.DataAccess.Entities.Player playerTwo;
+
+    BlazorApp1.DataAccess.Entities.Warrior selectedWarriorOne = new DataAccess.Entities.Warrior();
+    BlazorApp1.DataAccess.Entities.Warrior selectedWarriorTwo = new DataAccess.Entities.Warrior();
+
+    List<BlazorApp1.DataAccess.Entities.Warrior> warriors;
+
+    List<BlazorApp1.DataAccess.Entities.Player> players;
+
+    bool playersPresent = false;
+    bool playerOneMissing = true;
+    bool playerTwoMissing = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        game = FightService.GetLastGame();
+        players = FightService.GetPlayersLastGame(game);
+
+        if (players != null && players.Count == 2 )
+        {
+            playersPresent = true;
+
+            playerOne = players.ElementAt(0);
+            Console.WriteLine(playerOne.Nickname);
+            playerTwo = players.ElementAt(1);
+            Console.WriteLine(playerTwo.Nickname);
+        }
+        warriors = await FightService.GetAllWarriors();
+    }
+
+    public async Task SelectWarriorOne()
+    {
+        await FightService.SelectWarrior(playerOne, selectedWarriorOne);
+        playerOneMissing = false;
+    }
+
+    public async Task SelectWarriorTwo()
+    {
+        await FightService.SelectWarrior(playerTwo, selectedWarriorTwo);
+        playerTwoMissing = false;
+    }
+}

@@ -24,11 +24,10 @@ namespace BlazorApp1.DataAccess.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task SelectWarrior(int playerId, int warriorId)
+        public async Task SelectWarrior(Player player, Warrior warrior)
         {
-            var player = _context.Players.FirstOrDefault(p => p.Id == playerId);
+            player.Warrior = warrior;
 
-            player.WarriorId = warriorId;
             _context.Players.Update(player);
             await _context.SaveChangesAsync();
         }
