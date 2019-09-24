@@ -36,8 +36,9 @@ namespace BlazorApp1
             services.AddServerSideBlazor();
             services.AddSingleton<WeatherForecastService>();
             services.AddTransient<IFightService, FightService>();
+            services.AddTransient<IGameRepository, GameRepository>();
+            services.AddTransient<IPlayerRepository, PlayerRepository>();
             services.AddTransient<IWarriorRepository, WarriorRepository>();
-
             
 
             services.AddDbContext<DemoContext>(options =>
