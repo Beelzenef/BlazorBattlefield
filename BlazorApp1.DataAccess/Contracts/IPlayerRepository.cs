@@ -7,6 +7,7 @@ namespace BlazorApp1.DataAccess.Contracts
 {
     public interface IPlayerRepository
     {
-        public Task AddPlayers(List<Player> players, Game game);
+        Task AddPlayers(Player player, Game game);
+        Task SelectWarrior(int playerId, int warriorId);
     }
 }

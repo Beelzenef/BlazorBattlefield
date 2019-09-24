@@ -8,7 +8,7 @@
         public int GameId { get; set; }
         public Game Game { get; set; }
 
-        public int WarriorId { get; set; }
+        public int? WarriorId { get; set; }
         public Warrior Warrior { get; set; }
     }
 }

@@ -9,7 +9,7 @@ namespace BlazorApp1.DataAccess.Contracts
     {
         public Game GetGame(int gameId);
         public List<Game> GetAllRepository();
-        public Task CreateGame();
+        public Task CreateGame(Game game);
         public Game GetLastGame();
         public List<Player> GetPlayers(int gameId);
     }

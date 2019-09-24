@@ -29,7 +29,6 @@ namespace BlazorApp1.DataAccess
             modelBuilder.Entity<Warrior>()
                 .HasOne(w => w.Player)
                 .WithOne(p => p.Warrior);
-                //.HasForeignKey<Warrior>(w => w.PlayerId);
             modelBuilder.Entity<Warrior>()
                 .ToTable("Warrior");
         }

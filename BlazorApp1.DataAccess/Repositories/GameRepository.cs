@@ -21,9 +21,9 @@ namespace BlazorApp1.DataAccess.Repositories
             return _context.Games.FirstOrDefault(g => g.Id == gameId);
         }
 
-        public async Task CreateGame()
+        public async Task CreateGame(Game game)
         {
-            _context.Games.Add(new Game());
+            _context.Games.Add(game);
             await _context.SaveChangesAsync();
         }
 
@@ -34,7 +34,8 @@ namespace BlazorApp1.DataAccess.Repositories
 
         public Game GetLastGame()
         {
-            return _context.Games.Last();
+            var result = _context.Games.OrderByDescending(g => g.Id).FirstOrDefault();
+            return result;
         }
 
         public List<Player> GetPlayers(int gameId)
