@@ -32,5 +32,11 @@ namespace BlazorApp1.DataAccess.Repositories
             return _context.Warrior.FirstOrDefault(w => w.Name == warriorName);
         }
 
+        public async Task GetDamage(Warrior target)
+        {
+            _context.Warrior.Update(target);
+            await _context.SaveChangesAsync();
+        }
+
     }
 }

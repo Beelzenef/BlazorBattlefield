@@ -1,6 +1,7 @@
 ﻿using BlazorApp1.Application.Contracts;
 using BlazorApp1.DataAccess.Contracts;
 using BlazorApp1.DataAccess.Entities;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -57,6 +58,16 @@ namespace BlazorApp1.Application
         public async Task<List<Warrior>> GetAllWarriors()
         {
             return await _warriorRepository.GetAll();
+        }
+
+        public async Task<Warrior> Attack(Warrior attacker, Warrior target)
+        {
+            Random random = new Random();
+            var damage = random.Next(0, attacker.Strength);
+
+            target.Defense -= damage;
+            await _warriorRepository.GetDamage(target);
+            return target;
         }
     }
 }

@@ -5,79 +5,140 @@
 
 <h1>Choose warriors!</h1>
 
-@if (!playersPresent) {
-    <label>Players missing for this game!</label>
-}
-else {
-    <EditForm Model="@selectedWarriorOne">
-
-        <table class="form-group">
-            <tr>
-                <td>
-                    <p>
-                        <label>@playerOne.Nickname</label>
-                    </p>
-                </td>
-                <td>
+@if (!combatReady)
+{
+    @if (!playersPresent)
+    {
+        <label>Players missing for this game!</label>
+    }
+    else
+    {
+            <table with="70%" class="form-group">
+                <tr>
+                    <td>
+                        <p>
+                            <label>Player 1: @playerOne.Nickname</label>
+                        </p>
+                    </td>
+                    <td>
+                        <p>
+                            <label>Player 2: @playerTwo.Nickname</label>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
                         <p>
                             <label>Select warrior</label>
-                            <InputSelect id="warriorOne" @bind-Value="selectedWarriorOne.Name">
-                                @foreach (var item in warriors)
-                                {
-                                    <option value="@item.Name">@item.Name - @item.Class</option>
-                                }
-                            </InputSelect>
                         </p>
-                </td>
-                 <td>
-                    @if (playerOneMissing)
-                    {
+                        @foreach (var item in warriors)
+                        {
+                            <p>
+                                <button class="btn btn-primary" @onclick="@(() => W1Selected(@item))">Select</button>
+                                <label>@item.Name - @item.Class</label>
+                            </p>
+                        }
+                        <p>@selectedWarriorOne.Name - @selectedWarriorOne.Class</p>
+                    </td>
+
+                    <td>
                         <p>
-                            <button class="btn btn-primary" @onclick="SelectWarriorOne">Select warrior!</button>
-                        </p>
-                    }
-                </td>
-            </tr>
-        </table>
-    </EditForm>
-
-    <EditForm Model="@selectedWarriorTwo">
-        <table class="form-group">
-            <tr>
-                <td>
-                    <p>
-                        <label>@playerTwo.Nickname:</label>
-                    </p>
-                </td>
-
-                <td>
-                    <p>
                             <label>Select warrior</label>
-                            <InputSelect id="warriorTwo" @bind-Value="selectedWarriorTwo.Name">
-                                @foreach (var item in warriors)
-                                {
-                                    <option value="@item.Name">@item.Name - @item.Class</option>
-                                }
-                            </InputSelect>
-                    </p>
-                </td>
-                 <td>
-                    @if (playerTwoMissing)
-                    {
-                        <p>
-                            <button class="btn btn-primary" @onclick="SelectWarriorTwo">Select warrior!</button>
                         </p>
-                    }
-                </td>
-            </tr>
+                        @foreach (var item in warriors)
+                        {
+                            <p>
+                                <button class="btn btn-primary" @onclick="@(() => W2Selected(@item))">Select</button>
+                                <label>@item.Name - @item.Class</label>
+                            </p>
+                        }
+                        <p>@selectedWarriorTwo.Name - @selectedWarriorTwo.Class</p>
+                    </td>
+                </tr>
 
-        </table>
-
-    </EditForm>
+            </table>
+    }
 }
+
+    @if (combatReady)
+    {
+
+        <h1>Combat!</h1>
+    <table with="70%" class="form-group">
+        <tr>
+            <td>
+                <p>
+                    <label>@playerOne.Nickname - @selectedWarriorOne.Name</label>
+                </p>
+            </td>
+             
+            <td>
+                <p>
+                    <label>@playerTwo.Nickname - @selectedWarriorTwo.Name</label>
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>
+                    <label>Defense: @selectedWarriorOne.Defense</label>
+                </p>
+            </td>
+
+            <td>
+                <p>
+                    <label>Defense: @selectedWarriorTwo.Defense</label>
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>
+                    <label>Strength: @selectedWarriorOne.Strength</label>
+                </p>
+            </td>
+
+            <td>
+                <p>
+                    <label>Strength: @selectedWarriorTwo.Strength</label>
+                </p>
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                @if (isPlayerOneDead)
+                {
+                    <p><label>Dead!</label></p>
+                }
+                else
+                {
+                    <p>
+                        <button class="btn btn-danger" @onclick="AttackP1">Attack</button>
+                    </p>
+                }
+            </td>
+
+            <td>
+                @if (isPlayerTwoDead)
+                {
+                    <p><label>Dead!</label></p>
+                }
+                else
+                {
+                    <p>
+                        <button class="btn btn-danger" @onclick="AttackP2">Attack</button>
+                    </p>
+                }
+            </td>
+        </tr>
+
+    </table>
+    }
+
 
 @code {
-    
+
     BlazorApp1.DataAccess.Entities.Game game;
 
     BlazorApp1.DataAccess.Entities.Player playerOne;
@@ -93,6 +154,11 @@ else {
     bool playersPresent = false;
     bool playerOneMissing = true;
     bool playerTwoMissing = true;
+
+    bool isPlayerOneDead = false;
+    bool isPlayerTwoDead = false;
+
+    bool combatReady = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -111,15 +177,40 @@ else {
         warriors = await FightService.GetAllWarriors();
     }
 
-    public async Task SelectWarriorOne()
+    private async Task W2Selected(BlazorApp1.DataAccess.Entities.Warrior w)
     {
-        await FightService.SelectWarrior(playerOne, selectedWarriorOne);
-        playerOneMissing = false;
-    }
-
-    public async Task SelectWarriorTwo()
-    {
+        selectedWarriorTwo = w;
         await FightService.SelectWarrior(playerTwo, selectedWarriorTwo);
         playerTwoMissing = false;
+
+        CheckCombatReady();
+    }
+
+    private async Task W1Selected(BlazorApp1.DataAccess.Entities.Warrior w)
+    {
+        selectedWarriorOne = w;
+        await FightService.SelectWarrior(playerOne, selectedWarriorOne);
+        playerOneMissing = false;
+
+        CheckCombatReady();
+    }
+
+    private void CheckCombatReady()
+    {
+        combatReady = !playerTwoMissing && !playerOneMissing;
+    }
+
+    public async Task AttackP1()
+    {
+        selectedWarriorTwo = await FightService.Attack(playerOne.Warrior, playerTwo.Warrior);
+
+        isPlayerTwoDead = selectedWarriorTwo.Defense <= 0;
+    }
+
+    public async Task AttackP2()
+    {
+        selectedWarriorOne = await FightService.Attack(playerTwo.Warrior, playerOne.Warrior);
+
+        isPlayerOneDead = selectedWarriorOne.Defense <= 0;
     }
 }
