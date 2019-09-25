@@ -51,5 +51,19 @@ namespace BlazorApp1.DataAccess.Repositories
             await _context.SaveChangesAsync();
         }
 
+        public async Task<List<Warrior>> GetNonSelectedWarriors(Warrior warriorToExclude)
+        {
+            if (warriorToExclude == null)
+            {
+                return await GetAll();
+            }
+
+            var warrior = GetWarriorByName(warriorToExclude.Name);
+
+            var warriors = _context.Warrior.Where(w => w.Id != warrior.Id);
+
+            return warriors.ToList();
+        }
+
     }
 }

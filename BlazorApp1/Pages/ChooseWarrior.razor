@@ -13,43 +13,35 @@
     }
     else
     {
-            <table with="70%" class="form-group">
-                <tr>
+            <table width="70%" class="form-group">
+                <tr >
                     <td>
                         <p>
-                            <label>Player 1: @playerOne.Nickname</label>
+                            <label>Player 1: <u>@playerOne.Nickname</u></label>
                         </p>
                     </td>
                     <td>
                         <p>
-                            <label>Player 2: @playerTwo.Nickname</label>
+                            <label>Player 2: <u>@playerTwo.Nickname</u></label>
                         </p>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <p>
-                            <label>Select warrior</label>
-                        </p>
-                        @foreach (var item in warriors)
+                        @foreach (var item in warriorsP1)
                         {
                             <p>
-                                <button class="btn btn-primary" @onclick="@(() => W1Selected(@item))">Select</button>
-                                <label>@item.Name - @item.Class</label>
+                                <button class="btn btn-primary" @onclick="@(() => W1Selected(@item))">Select @item.Name, @item.Class</button>
                             </p>
                         }
                         <p>@selectedWarriorOne.Name - @selectedWarriorOne.Class</p>
                     </td>
 
                     <td>
-                        <p>
-                            <label>Select warrior</label>
-                        </p>
-                        @foreach (var item in warriors)
+                        @foreach (var item in warriorsP2)
                         {
                             <p>
-                                <button class="btn btn-primary" @onclick="@(() => W2Selected(@item))">Select</button>
-                                <label>@item.Name - @item.Class</label>
+                                <button class="btn btn-primary" @onclick="@(() => W2Selected(@item))">Select @item.Name, @item.Class</button>
                             </p>
                         }
                         <p>@selectedWarriorTwo.Name - @selectedWarriorTwo.Class</p>
@@ -59,12 +51,10 @@
             </table>
     }
 }
-
-    @if (combatReady)
-    {
-
-        <h1>Combat!</h1>
-    <table with="70%" class="form-group">
+else
+{
+    <h1>Combat!</h1>
+    <table width="70%" class="form-group">
         <tr>
             <td>
                 <p>
@@ -109,7 +99,9 @@
             <td>
                 @if (isPlayerOneDead)
                 {
-                    <p><label>Dead!</label></p>
+                    <p>
+                        <button class="btn btn-danger" disabled>DEAD</button>
+                    </p>
                 }
                 else
                 {
@@ -122,7 +114,9 @@
             <td>
                 @if (isPlayerTwoDead)
                 {
-                    <p><label>Dead!</label></p>
+                    <p>
+                        <button class="btn btn-danger" disabled>DEAD</button>
+                    </p>
                 }
                 else
                 {
@@ -134,7 +128,7 @@
         </tr>
 
     </table>
-    }
+}
 
 
 @code {
@@ -148,6 +142,8 @@
     BlazorApp1.DataAccess.Entities.Warrior selectedWarriorTwo = new DataAccess.Entities.Warrior();
 
     List<BlazorApp1.DataAccess.Entities.Warrior> warriors;
+    List<BlazorApp1.DataAccess.Entities.Warrior> warriorsP1;
+    List<BlazorApp1.DataAccess.Entities.Warrior> warriorsP2;
 
     List<BlazorApp1.DataAccess.Entities.Player> players;
 
@@ -175,6 +171,9 @@
             Console.WriteLine(playerTwo.Nickname);
         }
         warriors = await FightService.GetAllWarriors();
+
+        warriorsP1 = warriors;
+        warriorsP2 = warriors;
     }
 
     private async Task W2Selected(BlazorApp1.DataAccess.Entities.Warrior w)
@@ -182,6 +181,8 @@
         selectedWarriorTwo = w;
         await FightService.SelectWarrior(playerTwo, selectedWarriorTwo);
         playerTwoMissing = false;
+
+        warriorsP1 = await FightService.GetNonSelectedWarriors(selectedWarriorTwo);
 
         CheckCombatReady();
     }
@@ -191,6 +192,8 @@
         selectedWarriorOne = w;
         await FightService.SelectWarrior(playerOne, selectedWarriorOne);
         playerOneMissing = false;
+
+        warriorsP2 = await FightService.GetNonSelectedWarriors(selectedWarriorOne);
 
         CheckCombatReady();
     }

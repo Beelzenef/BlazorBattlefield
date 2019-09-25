@@ -60,12 +60,24 @@ namespace BlazorApp1.Application
             return await _warriorRepository.GetAll();
         }
 
+        public async Task<List<Warrior>> GetNonSelectedWarriors(Warrior warriorToExclude)
+        {
+            return await _warriorRepository.GetNonSelectedWarriors(warriorToExclude);
+        }
+
         public async Task<Warrior> Attack(Warrior attacker, Warrior target)
         {
             Random random = new Random();
-            var damage = random.Next(0, attacker.Strength);
+            var damage = random.Next(1, attacker.Strength);
 
-            target.Defense -= damage;
+            var newDefense = target.Defense - damage;
+
+            if (newDefense < 0)
+            {
+                newDefense = 0;
+            }
+
+            target.Defense = newDefense;
             await _warriorRepository.GetDamage(target);
             return target;
         }

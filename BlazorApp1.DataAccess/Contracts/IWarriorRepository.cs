@@ -14,5 +14,6 @@ namespace BlazorApp1.DataAccess.Contracts
         Task GetDamage(Warrior warrior);
 
         Task RestoreAllDefense();
+        Task<List<Warrior>> GetNonSelectedWarriors(Warrior warriorToExclude);
     }
 }
