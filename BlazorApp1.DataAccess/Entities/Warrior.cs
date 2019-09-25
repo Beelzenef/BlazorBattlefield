@@ -14,6 +14,6 @@ namespace BlazorApp1.DataAccess.Entities
         public int Magic { get; set; }
 
         //public int PlayerId { get; set; }
-        public Player Player { get; set; }
+        public List<Player> Players { get; set; }
     }
 }

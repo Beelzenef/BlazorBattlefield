@@ -27,7 +27,7 @@ namespace BlazorApp1.DataAccess
             modelBuilder.Entity<Player>().ToTable("Player");
 
             modelBuilder.Entity<Warrior>()
-                .HasOne(w => w.Player)
+                .HasMany(w => w.Players)
                 .WithOne(p => p.Warrior);
             modelBuilder.Entity<Warrior>()
                 .ToTable("Warrior");
