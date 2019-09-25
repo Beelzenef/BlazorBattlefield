@@ -68,8 +68,29 @@ namespace BlazorApp1.Application
         public async Task<Warrior> Attack(Warrior attacker, Warrior target)
         {
             Random random = new Random();
-            var damage = random.Next(1, attacker.Strength);
+            var maxDamage = CalculateMaxDamage(attacker.Strength);
+            var damage = random.Next(1, maxDamage);
 
+            return await InflictDamage(target, damage);
+        }
+
+        public async Task<Warrior> CastSpell(Warrior attacker, Warrior target)
+        {
+            Random random = new Random();
+            var maxDamage = CalculateMaxDamage(attacker.Magic);
+            var damage = random.Next(1, maxDamage);
+
+            return await InflictDamage(target, damage);
+        }
+
+        private int CalculateMaxDamage(int attackStat)
+        {
+            var maxDamage = attackStat < 0 ? 1 : attackStat;
+            return maxDamage;
+        }
+
+        private async Task<Warrior> InflictDamage(Warrior target, int damage)
+        {
             var newDefense = target.Defense - damage;
 
             if (newDefense < 0)

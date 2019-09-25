@@ -3,52 +3,51 @@
 @using BlazorApp1.Data
 @inject BlazorApp1.Application.Contracts.IFightService FightService
 
-<h1>Choose warriors!</h1>
-
 @if (!combatReady)
 {
+    <h1>Choose warriors!</h1>
     @if (!playersPresent)
     {
         <label>Players missing for this game!</label>
     }
     else
     {
-            <table width="70%" class="form-group">
-                <tr >
-                    <td>
+        <table width="70%" class="form-group">
+            <tr>
+                <td>
+                    <p>
+                        <label>Player 1: <u>@playerOne.Nickname</u></label>
+                    </p>
+                </td>
+                <td>
+                    <p>
+                        <label>Player 2: <u>@playerTwo.Nickname</u></label>
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @foreach (var item in warriorsP1)
+                    {
                         <p>
-                            <label>Player 1: <u>@playerOne.Nickname</u></label>
+                            <button class="btn btn-primary" @onclick="@(() => W1Selected(@item))">Select @item.Name, @item.Class</button>
                         </p>
-                    </td>
-                    <td>
+                    }
+                    <p>@selectedWarriorOne.Name - @selectedWarriorOne.Class</p>
+                </td>
+
+                <td>
+                    @foreach (var item in warriorsP2)
+                    {
                         <p>
-                            <label>Player 2: <u>@playerTwo.Nickname</u></label>
+                            <button class="btn btn-primary" @onclick="@(() => W2Selected(@item))">Select @item.Name, @item.Class</button>
                         </p>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        @foreach (var item in warriorsP1)
-                        {
-                            <p>
-                                <button class="btn btn-primary" @onclick="@(() => W1Selected(@item))">Select @item.Name, @item.Class</button>
-                            </p>
-                        }
-                        <p>@selectedWarriorOne.Name - @selectedWarriorOne.Class</p>
-                    </td>
+                    }
+                    <p>@selectedWarriorTwo.Name - @selectedWarriorTwo.Class</p>
+                </td>
+            </tr>
 
-                    <td>
-                        @foreach (var item in warriorsP2)
-                        {
-                            <p>
-                                <button class="btn btn-primary" @onclick="@(() => W2Selected(@item))">Select @item.Name, @item.Class</button>
-                            </p>
-                        }
-                        <p>@selectedWarriorTwo.Name - @selectedWarriorTwo.Class</p>
-                    </td>
-                </tr>
-
-            </table>
+        </table>
     }
 }
 else
@@ -61,7 +60,7 @@ else
                     <label>@playerOne.Nickname - @selectedWarriorOne.Name</label>
                 </p>
             </td>
-             
+
             <td>
                 <p>
                     <label>@playerTwo.Nickname - @selectedWarriorTwo.Name</label>
@@ -94,6 +93,19 @@ else
                 </p>
             </td>
         </tr>
+        <tr>
+            <td>
+                <p>
+                    <label>Magic: @selectedWarriorOne.Magic</label>
+                </p>
+            </td>
+
+            <td>
+                <p>
+                    <label>Magic: @selectedWarriorTwo.Magic</label>
+                </p>
+            </td>
+        </tr>
 
         <tr>
             <td>
@@ -107,6 +119,9 @@ else
                 {
                     <p>
                         <button class="btn btn-danger" @onclick="AttackP1">Attack</button>
+                    </p>
+                    <p>
+                        <button class="btn btn-warning" @onclick="SpellP1">Cast spell</button>
                     </p>
                 }
             </td>
@@ -122,6 +137,9 @@ else
                 {
                     <p>
                         <button class="btn btn-danger" @onclick="AttackP2">Attack</button>
+                    </p>
+                    <p>
+                        <button class="btn btn-warning" @onclick="SpellP2">Cast spell</button>
                     </p>
                 }
             </td>
@@ -161,7 +179,7 @@ else
         game = FightService.GetLastGame();
         players = FightService.GetPlayersLastGame(game);
 
-        if (players != null && players.Count == 2 )
+        if (players != null && players.Count == 2)
         {
             playersPresent = true;
 
@@ -213,6 +231,20 @@ else
     public async Task AttackP2()
     {
         selectedWarriorOne = await FightService.Attack(playerTwo.Warrior, playerOne.Warrior);
+
+        isPlayerOneDead = selectedWarriorOne.Defense <= 0;
+    }
+
+    public async Task SpellP1()
+    {
+        selectedWarriorTwo = await FightService.CastSpell(playerOne.Warrior, playerTwo.Warrior);
+
+        isPlayerTwoDead = selectedWarriorTwo.Defense <= 0;
+    }
+
+    public async Task SpellP2()
+    {
+        selectedWarriorOne = await FightService.CastSpell(playerTwo.Warrior, playerOne.Warrior);
 
         isPlayerOneDead = selectedWarriorOne.Defense <= 0;
     }

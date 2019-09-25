@@ -15,6 +15,7 @@ namespace BlazorApp1.Application.Contracts
         Task SelectWarrior(Player player, Warrior warrior);
 
         Task<Warrior> Attack(Warrior attacker, Warrior target);
+        Task<Warrior> CastSpell(Warrior attacker, Warrior target);
 
         Task<Warrior> AddWarrior(Warrior warrior);
         Task<List<Warrior>> GetAllWarriors();
