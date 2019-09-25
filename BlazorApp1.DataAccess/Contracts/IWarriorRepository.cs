@@ -12,5 +12,7 @@ namespace BlazorApp1.DataAccess.Contracts
         Task<List<Warrior>> GetAll();
         Warrior GetWarriorByName(string warriorName);
         Task GetDamage(Warrior warrior);
+
+        Task RestoreAllDefense();
     }
 }

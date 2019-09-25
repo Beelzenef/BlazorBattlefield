@@ -5,6 +5,10 @@
 
 <h1>Warriors</h1>
 
+<p>
+    <button class="btn btn-success" @onclick="RestoreDefense">Heal all warriors</button>
+</p>
+
 @if (warriors == null)
 {
 	<p><em>Loading warrior data...</em></p>
@@ -42,5 +46,10 @@ else
     protected override async Task OnInitializedAsync()
     {
         warriors = await FightService.GetAllWarriors();
+    }
+
+    public async Task RestoreDefense()
+    {
+        await FightService.RestoreDefense();
     }
 }

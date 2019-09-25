@@ -69,5 +69,10 @@ namespace BlazorApp1.Application
             await _warriorRepository.GetDamage(target);
             return target;
         }
+
+        public async Task RestoreDefense()
+        {
+            await _warriorRepository.RestoreAllDefense();
+        }
     }
 }

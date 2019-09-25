@@ -38,5 +38,18 @@ namespace BlazorApp1.DataAccess.Repositories
             await _context.SaveChangesAsync();
         }
 
+        public async Task RestoreAllDefense()
+        {
+            var warriors = _context.Warrior.ToList();
+
+            foreach (var warrior in warriors)
+            {
+                warrior.Defense = 10;
+            }
+
+            _context.Warrior.UpdateRange(warriors);
+            await _context.SaveChangesAsync();
+        }
+
     }
 }

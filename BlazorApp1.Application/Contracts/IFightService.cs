@@ -18,5 +18,7 @@ namespace BlazorApp1.Application.Contracts
 
         Task<Warrior> AddWarrior(Warrior warrior);
         Task<List<Warrior>> GetAllWarriors();
+
+        Task RestoreDefense();
     }
 }
