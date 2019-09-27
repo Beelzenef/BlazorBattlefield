@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace BlazorApp1.DataAccess.Entities
 {
@@ -13,7 +11,8 @@ namespace BlazorApp1.DataAccess.Entities
         public int Defense { get; set; }
         public int Magic { get; set; }
 
-        //public int PlayerId { get; set; }
+        public string ImageUrl { get; set; }
+
         public List<Player> Players { get; set; }
     }
 }
