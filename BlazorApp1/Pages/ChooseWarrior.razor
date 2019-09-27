@@ -54,6 +54,27 @@ else
 {
     <h1>Combat!</h1>
     <table width="70%" class="form-group">
+
+        <tr>
+            <td>
+                <p>
+                    @if (!string.IsNullOrEmpty(@selectedWarriorOne.ImageUrl))
+                    {
+                        <img src="@selectedWarriorOne.ImageUrl" height="100" width="100" />
+                    }
+                </p>
+            </td>
+
+            <td>
+                <p>
+                    @if (!string.IsNullOrEmpty(@selectedWarriorTwo.ImageUrl))
+                    {
+                        <img src="@selectedWarriorOne.ImageUrl" height="100" width="100" />
+                    }
+                </p>
+            </td>
+        </tr>
+
         <tr>
             <td>
                 <p>
